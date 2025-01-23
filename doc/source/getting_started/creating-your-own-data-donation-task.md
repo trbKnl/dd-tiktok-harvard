@@ -1,63 +1,7 @@
-# Creating your own donation task
-
-The donation task is at the core of a data donation study. 
-It is the step where the participant is actually going to donate their data.
-
-The data donation task goes as follows:
-
-1. The participant goes to your data donation task app in a browser
-2. The participant is prompted to submit their data download package (DDP)
-3. A Python script you wrote, extracts the data you need for your research
-4. That data gets presented to the participant on screen
-5. The participants decides to donate and you receive the data 
-
-## Using the data donation task in a data donation study
-
-The data donation task needs to be used in together with Next. Next is the backend for the data donation task. With Next you can configure a data donation study: i.e. configure: 
-
-* Your data donation task
-* An information page
-* An informed consent page
-* A privacy policy
-* Instruction manuals for participants
-* Configure where the data should go
-* and more
-
-You can find more information on how to deploy a study in the wiki
+# Creating your own data donation task
 
 
-## How does the data donation task work?
-
-**The idea behind the data donation task**
-The data donation task repository is in essence a toolkit with which you can build your own custom data donation task.
-It is designed as a toolkit because researchers need to tailor the data donation task to their own interests; they interested in different DDPs and are interested in different data within those DDPs.
-
-This toolkit approach has several benefits:
-
-1. It allows for a bespoke experience for the participant
-2. You can only extract (and possibly aggregate) the data you need for you study, which we think is important in order to preserve the privacy of the participant and is often a requirement from your data steward/ethical review board
-
-These benefits come at the cost of added complexity compared to a one size fits all approach that extracts most or all data from the participant.
-
-**The design of the data donation task**
-The data donation task contains reusable components (such as: a screen that prompts the participant to submit their DDP and a screen with tables that the participants need to review prior to donation) that you can use and combine in creative ways to make your own study.
-These components are combined in a Python script that is created by the researcher. 
-
-On a high level the script works as follows:
-
-1. The Python script determines which user interface (UI) component needs to be shown to the participant
-2. Whenever the participant is done interacting with the UI component, the result of that interaction is returned to the script
-3. The script handles the return result en determine the next UI component that the participant needs to see or interact with, go back to step 1 until the end of the donation task
-
-**The architecture of the data donation task**
-The data donation task is a web application (build with [React](https://react.dev/) and [Pyodide](https://pyodide.org/en/stable/)) that completely runs in the browser of the participant. 
-The Python script and the UI components will run completely in the browser of the participant.
-Data is only sent to the server upon the participant clicking a consent button.
-
-
-## Start writing your first data donation task script
-
-After you have forked or cloned and installed this repository (see [instruction](https://github.com/d3i-infra/feldspar/wiki/Installation)) you can start creating your own donation task. 
+After you have forked or cloned and installed the repository you can start creating your own donation task. 
 
 You can create your own study by changing and/or adapting the code in the following directory `port/src/framework/processing/py/port/`
 This directory contains the following files:
@@ -155,7 +99,7 @@ def process(session_id: str):
 
 **The functions used in `process`**
 
-These are all the functions used in `process` together they make up `script.py`.
+These are all the functions used in `process` together they make up `script.py` (Click on the functions to expand)
 
 <details>
 <summary>extract_the_data_you_are_interested_in</summary>

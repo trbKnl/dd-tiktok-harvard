@@ -14,18 +14,18 @@ As a researcher you can log in to Next and configure data donation study, this m
 
 After configuration participants can be sent to Next with a unique id in the url. This unique key id be used when storing the data, so you know who donated their data
 
-### Next as a paid service
+## Next as a paid service
 
 You can use Next as a paid service provided by [Eyra](https://eyra.co/). 
 Please contact Eyra if this is something you are interested in.
 
 
-### Self service Next (community version) on Surf Research Cloud
+## Self service Next (community version) on Surf Research Cloud
 
 Next is available as an offering on [Surf Research Cloud](https://www.surf.nl/en/services/surf-research-cloud) available for Researchers at Dutch universities and universities of applied sciences.
 This offering on Surf Research Cloud comes with no service or warranties. 
 
-#### Applying for an EINFRA grant
+### Applying for an EINFRA grant
 
 In order to use Surf Research Cloud you need credits. 
 
@@ -35,19 +35,19 @@ Dutch researchers can get credits on Surf Research Cloud by applying for an EINF
 2. Under "Apply for access" click "Small Compute applications (NWO)"
 3. Fill in and submit the form (see the instructions below)
 
-#### Instructions to fill in the EINFRA grant form
+### Instructions to fill in the EINFRA grant form
 
 Most fields in the form are self explanatory or optional. Here we explain the fields that aren't self explanatory:
 
-*Description*
+#### Description
 
 Put here a small description of what you intent to do. Explain that you want to do a data donation study.
 
-*Scientific project descrition*
+#### Scientific project description
 
 Put down the description of your research project, you could copy and paste this from a grant proposal.
 
-*Technical project requirements*
+#### Technical project requirements
 
 In this section you need to explain what resources you need. Based on the resources you need you will receive the appropriate amount of credits.
 This is an example descrition of the technical project requirements for data donation:
@@ -58,33 +58,32 @@ This is an example descrition of the technical project requirements for data don
 
 You need to adapt it to your situation. You should realize that if the workspace is provisioned (meaning its "on" or "running") credits will be deducted. Try to be realistic for the amounts of weeks you need, but take into account unforseen events.
 
-*Resources*
+#### Resources
 
 Research Cloud - HPC Cloud
 
-*Research Drive: Do you need storage in Research Drive?*
+#### Research Drive: Do you need storage in Research Drive?
 
 50 GiB
 
-#### After you received the EINFRA grant
+### After you received the EINFRA grant
 
 You need to contact [datadonation.eu](https://datadonation.eu/) they will make the "Next self service" catalog item available to you.
 
 
-### Self service Next (community version)
+## Self service Next (community version)
 
 Next is a free and open source tool and you could host it yourself. You can find Next [here](https://github.com/eyra/mono/blob/master/SELFHOSTING.md). You can try it out using Docker, check the tutorial {doc}`./next-in-docker`
 
 
-
-### Which option should I choose?
+## Which option should I choose?
 
 * Next as a paid service: If you have research budget; want to be unburdened and get your data donation study done, this is the best option.
 * Self service community Next on Surf Research Cloud: You are a researcher at a Dutch university with no budget this is the best option. When choosing this option you have to realize that it comes with no service or warranties, you have to know what you are doing.
 * Self service community Next: If you want to provide Next as a service to your organization.
 
 
-### Add data donation task to your data donation study on Next
+## Add data donation task to your data donation study on Next
 
 After you have created your data donation task with this repository, you can use this task directly in Next. You can do this as follows:
 

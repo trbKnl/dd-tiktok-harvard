@@ -31,12 +31,12 @@ We are going to create a folder with the following structure:
 ```
 .
 ├── docker-compose.yaml
-├── proxy
-│   ├── certs
-│   │   ├── nginx-selfsigned.crt
-│   │   └── nginx-selfsigned.key
-│   └── conf
-│       └── nginx.conf
+└── proxy
+    ├── certs
+    │   ├── nginx-selfsigned.crt
+    │   └── nginx-selfsigned.key
+    └── conf
+        └── nginx.conf
 ```
 
 In the next step we are going to create the files.

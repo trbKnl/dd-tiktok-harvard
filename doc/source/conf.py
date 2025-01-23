@@ -30,11 +30,20 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'piccolo_theme'
+html_theme = "sphinx_book_theme"
 html_static_path = ['_static']
 
-html_sidebars = {
-    '**': [
-        'globaltoc.html',
-    ]
+#html_sidebars = {
+#    '**': [
+#        'globaltoc.html',
+#    ]
+#}
+
+html_theme_options = {
+    "globaltoc_collapse": False,
+    "home_page_in_toc": True,
+    "repository_url": "https://github.com/d3i-infra/data-donation-task",
+    "use_repository_button": True,
 }
+
+html_title = "The data donation task"

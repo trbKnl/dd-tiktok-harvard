@@ -1,7 +1,7 @@
 """
 ChatGPT
 
-This module contains an example flow of a ChatGPT data donation study
+This module provides an example flow of a ChatGPT data donation study
 """
 import logging
 
