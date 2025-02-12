@@ -8,7 +8,6 @@ from typing import Dict
 import logging
 import io
 import re
-import re
 
 import pandas as pd
 
@@ -27,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 DDP_CATEGORIES = [
     DDPCategory(
-        id="json_en",
+        id="json_txt",
         ddp_filetype=DDPFiletype.JSON,
         language=Language.EN,
         known_files=[
@@ -90,7 +89,7 @@ def browsing_history_to_df(tiktok_zip: str) -> Dict[str, Dict[str, str]] | None 
         pattern = re.compile(r"^Date: (.*?)\nLink: (.*?)$", re.MULTILINE)
         matches = re.findall(pattern, text)
         out = {
-            "Time and Date": { f"{i}": date for i, (date, _) in enumerate(matches) },
+            "Time and date": { f"{i}": date for i, (date, _) in enumerate(matches) },
             "Video watched": { f"{i}": url for i, (_, url) in enumerate(matches) }
         }
 
@@ -112,13 +111,32 @@ def favorite_hashtag_to_df(tiktok_zip: str):
 
         pattern = re.compile(r"^Date: (.*?)\nHashTag Link(?::|::) (.*?)$", re.MULTILINE)
         matches = re.findall(pattern, text)
-        out = pd.DataFrame(matches, columns=["Tijdstip", "Hashtag url"]) # pyright: ignore
+        out = pd.DataFrame(matches, columns=["Time and date", "Hashtag url"]) # pyright: ignore
 
     except Exception as e:
         logger.error(e)
 
     return out
 
+
+# comments_to_df
+def comments_to_df(tiktok_zip: str):
+
+    out = pd.DataFrame()
+
+    try:
+        b = eh.extract_file_from_zip(tiktok_zip, "Comments.txt")
+        b = io.TextIOWrapper(b, encoding='utf-8')
+        text = b.read()
+
+        pattern = re.compile(r"^Date: (.*?)\nComment: (.*?)$", re.MULTILINE)
+        matches = re.findall(pattern, text)
+        out = pd.DataFrame(matches, columns=["Time and date", "Comment"]) # pyright: ignore
+
+    except Exception as e:
+        logger.error(e)
+
+    return out
 
 
 def favorite_videos_to_df(tiktok_zip: str):
@@ -132,7 +150,7 @@ def favorite_videos_to_df(tiktok_zip: str):
 
         pattern = re.compile(r"^Date: (.*?)\nLink: (.*?)$", re.MULTILINE)
         matches = re.findall(pattern, text)
-        out = pd.DataFrame(matches, columns=["Tijdstip", "Video"]) # pyright: ignore
+        out = pd.DataFrame(matches, columns=["Time and date", "Link"]) # pyright: ignore
 
     except Exception as e:
         logger.error(e)
@@ -160,13 +178,12 @@ def follower_to_df(tiktok_zip: str):
     return out
 
 
-
-def following_to_df(tiktok_zip: str):
+def login_history_to_df(tiktok_zip: str):
 
     out = pd.DataFrame()
 
     try:
-        b = eh.extract_file_from_zip(tiktok_zip, "Following.txt")
+        b = eh.extract_file_from_zip(tiktok_zip, "Login History.txt")
         b = io.TextIOWrapper(b, encoding='utf-8')
         text = b.read()
 
@@ -211,7 +228,7 @@ def like_list_to_df(tiktok_zip: str):
 
         pattern = re.compile(r"^Date: (.*?)\nLink: (.*?)$", re.MULTILINE)
         matches = re.findall(pattern, text)
-        out = pd.DataFrame(matches, columns=["Tijdstip", "Video"]) # pyright: ignore
+        out = pd.DataFrame(matches, columns=["Time and date", "Link"]) # pyright: ignore
 
     except Exception as e:
         logger.error(e)
@@ -230,13 +247,32 @@ def searches_to_df(tiktok_zip: str):
 
         pattern = re.compile(r"^Date: (.*?)\nSearch Term: (.*?)$", re.MULTILINE)
         matches = re.findall(pattern, text)
-        out = pd.DataFrame(matches, columns=["Tijdstip", "Zoekterm"]) # pyright: ignore
+        out = pd.DataFrame(matches, columns=["Time and date", "Search term"]) # pyright: ignore
 
     except Exception as e:
         logger.error(e)
 
     return out
 
+
+
+def following_to_df(tiktok_zip: str):
+
+    out = pd.DataFrame()
+
+    try:
+        b = eh.extract_file_from_zip(tiktok_zip, "Following.txt")
+        b = io.TextIOWrapper(b, encoding='utf-8')
+        text = b.read()
+
+        pattern = re.compile(r"^Date: (.*?)\nUsername: (.*?)$", re.MULTILINE)
+        matches = re.findall(pattern, text)
+        out = pd.DataFrame(matches, columns=["Time and Date", "Username"]) # pyright: ignore
+
+    except Exception as e:
+        logger.error(e)
+
+    return out
 
 
 def share_history_to_df(tiktok_zip: str):
@@ -250,7 +286,7 @@ def share_history_to_df(tiktok_zip: str):
 
         pattern = re.compile(r"^Date: (.*?)\nShared Content: (.*?)\nLink: (.*?)\nMethod: (.*?)$", re.MULTILINE)
         matches = re.findall(pattern, text)
-        out = pd.DataFrame(matches, columns=["Tijdstip", "Gedeelde inhoud", "Url", "Gedeeld via"]) # pyright: ignore
+        out = pd.DataFrame(matches, columns=["Time and date", "Shared content", "Link", "Method"]) # pyright: ignore
 
     except Exception as e:
         logger.error(e)
@@ -271,7 +307,7 @@ def settings_to_df(tiktok_zip: str):
         match = re.search(pattern, text)
         if match:
             interests = match.group(1).split("|")
-            out = pd.DataFrame(interests, columns=["Interesses"])  # pyright: ignore
+            out = pd.DataFrame(interests, columns=["Interests"])  # pyright: ignore
 
     except Exception as e:
         logger.error(e)
@@ -279,24 +315,27 @@ def settings_to_df(tiktok_zip: str):
     return out
 
 
+def post_to_df(tiktok_zip: str):
+
+    out = pd.DataFrame()
+
+    try:
+        b = eh.extract_file_from_zip(tiktok_zip, "Post.txt")
+        b = io.TextIOWrapper(b, encoding='utf-8')
+        text = b.read()
+
+        pattern = re.compile(r"^Date: (.*?)\nLink: (.*?)\nLike\(s\): (.*?)$", re.MULTILINE)
+        matches = re.findall(pattern, text)
+        out = pd.DataFrame(matches, columns=["Time and date", "Link", "Number of likes"]) # pyright: ignore
+
+    except Exception as e:
+        logger.error(e)
+
+    return out
+
 
 def extraction(tiktok_zip: str) -> list[props.PropsUIPromptConsentFormTable]:
     tables_to_render = []
-
-    data = browsing_history_to_df(tiktok_zip)
-    if data != None:
-        df_name = f"tiktok_video_browsing_history"
-        table_title = props.Translatable({
-            "en": "Watch history", 
-            "nl": "Kijkgeschiedenis"
-        })
-        table_description = props.Translatable({
-            "en": "The table below indicates exactly which TikTok videos you have watched and when that was.",
-            "nl": "De tabel hieronder geeft aan welke TikTok video's je precies hebt bekeken en wanneer dat was.",
-        })
-        table = props.PropsUIPromptConsentFormTable(df_name, table_title, data, table_description, []) 
-        tables_to_render.append(table)
-
 
     df = favorite_videos_to_df(tiktok_zip)
     if not df.empty:
@@ -306,39 +345,27 @@ def extraction(tiktok_zip: str) -> list[props.PropsUIPromptConsentFormTable]:
             "nl": "Favoriete video's", 
         })
         table_description = props.Translatable({
-            "nl": "In de tabel hieronder vind je de video's die tot je favorieten behoren.", 
-            "en": "In de tabel hieronder vind je de video's die tot je favorieten behoren.", 
+            "nl": "In the table below, you will find the videos that belong to your favorites.",
+            "en": "In the table below, you will find the videos that belong to your favorites.",
          })
         table = props.PropsUIPromptConsentFormTable(df_name, table_title, df, table_description)
         tables_to_render.append(table)
 
-    df = favorite_hashtag_to_df(tiktok_zip)
+
+    df = following_to_df(tiktok_zip)
     if not df.empty:
-        df_name = "tiktok_favorite_hashtags"
+        df_name = "tiktok_following"
         table_title = props.Translatable({
-            "en": "Favorite hashtags", 
-            "nl": "Favoriete hashtags", 
+            "en": "Who you are following", 
+            "nl": "Who you are following", 
         })
         table_description = props.Translatable({
-            "en": "In the table below, you will find the hashtags that are among your favorites.",
-            "nl": "In de tabel hieronder vind je de hashtags die tot je favorieten behoren.",
-        })
+            "nl": "In the table below you can find the usernames of the accounts you are following", 
+            "en": "In the table below you can find the usernames of the accounts you are following", 
+         })
         table = props.PropsUIPromptConsentFormTable(df_name, table_title, df, table_description)
         tables_to_render.append(table)
 
-    df = hashtag_to_df(tiktok_zip)
-    if not df.empty:
-        df_name = "tiktok_hashtag"
-        table_title = props.Translatable({
-            "en": "Hashtags in video's die je hebt geplaatst", 
-            "nl": "Hashtags in video's die je hebt geplaatst", 
-        })
-        table_description = props.Translatable({
-            "nl": "In de tabel hieronder vind je de hashtags die je gebruikt hebt in een video die je hebt geplaats op TikTok.",
-            "en": "In de tabel hieronder vind je de hashtags die je gebruikt hebt in een video die je hebt geplaats op TikTok.",
-        })
-        table = props.PropsUIPromptConsentFormTable(df_name, table_title, df, table_description)
-        tables_to_render.append(table)
 
     df = like_list_to_df(tiktok_zip)
     if not df.empty:
@@ -354,6 +381,21 @@ def extraction(tiktok_zip: str) -> list[props.PropsUIPromptConsentFormTable]:
 
         table =  props.PropsUIPromptConsentFormTable(df_name, table_title, df, table_description)
         tables_to_render.append(table)
+
+    df = login_history_to_df(tiktok_zip)
+    if not df.empty:
+        df_name = "tiktok_login_history"
+        table_title = props.Translatable({
+            "en": "When you logged in to TikTok", 
+            "nl": "When you logged in to TikTok", 
+        })
+        table_description = props.Translatable({
+            "nl": "In the table below you can find the date and the time you logged in to TikTok",
+            "en": "In the table below you can find the date and the time you logged in to TikTok",
+         })
+        table = props.PropsUIPromptConsentFormTable(df_name, table_title, df, table_description)
+        tables_to_render.append(table)
+
 
     df = searches_to_df(tiktok_zip)
     if not df.empty:
@@ -374,6 +416,7 @@ def extraction(tiktok_zip: str) -> list[props.PropsUIPromptConsentFormTable]:
         table =  props.PropsUIPromptConsentFormTable(df_name, table_title, df, table_description, [wordcloud])
         tables_to_render.append(table)
 
+
     df = share_history_to_df(tiktok_zip)
     if not df.empty:
         df_name = "tiktok_share_history"
@@ -390,17 +433,46 @@ def extraction(tiktok_zip: str) -> list[props.PropsUIPromptConsentFormTable]:
         tables_to_render.append(table)
 
 
-    df = settings_to_df(tiktok_zip)
-    if not df.empty:
-        df_name = "tiktok_settings"
+    data = browsing_history_to_df(tiktok_zip)
+    if data != None:
+        df_name = f"tiktok_video_browsing_history"
         table_title = props.Translatable({
-            "en": "Interests on TikTok", 
-            "nl": "Interesses op TikTok"
+            "en": "Watch history", 
+            "nl": "Kijkgeschiedenis"
+        })
+        table_description = props.Translatable({
+            "en": "The table below indicates exactly which TikTok videos you have watched and when that was.",
+            "nl": "De tabel hieronder geeft aan welke TikTok video's je precies hebt bekeken en wanneer dat was.",
+        })
+        table = props.PropsUIPromptConsentFormTable(df_name, table_title, data, table_description, []) 
+        tables_to_render.append(table)
+
+
+    df = comments_to_df(tiktok_zip)
+    if not df.empty:
+        df_name = "tiktok_comments"
+        table_title = props.Translatable({
+            "en": "Comments you posted on TikTok", 
+            "nl": "Comments you posted on TikTok", 
+        })
+        table_description = props.Translatable({
+            "nl": "In the table below you can find the comments you placed on tiktok", 
+            "en": "In the table below you can find the comments you placed on tiktok", 
+         })
+        table = props.PropsUIPromptConsentFormTable(df_name, table_title, df, table_description)
+        tables_to_render.append(table)
+
+    df = post_to_df(tiktok_zip)
+    if not df.empty:
+        df_name = "tiktok_post"
+        table_title = props.Translatable({
+            "en": "Your post history on TikTok", 
+            "nl": "Your post history on TikTok", 
         })
 
         table_description = props.Translatable({
-            "nl": "Hieronder vind je de interesses die je hebt aangevinkt bij het aanmaken van je TikTok account",
-            "en": "Below you will find the interests you selected when creating your TikTok account",
+            "en": "The table below shows the posts you made on TikTok",
+            "nl": "The table below shows the posts you made on TikTok",
         })
 
         table =  props.PropsUIPromptConsentFormTable(df_name, table_title, df, table_description)
