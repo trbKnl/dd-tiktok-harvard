@@ -400,11 +400,6 @@ def extraction(tiktok_zip: str) -> list[props.PropsUIPromptConsentFormTable]:
     df = searches_to_df(tiktok_zip)
     if not df.empty:
         df_name = "tiktok_searches"
-        wordcloud = {
-            "title": {"en": "", "nl": ""},
-            "type": "wordcloud",
-            "textColumn": "Zoekterm",
-        }
         table_title = props.Translatable({
             "en": "Search terms", 
             "nl": "Zoektermen", 
@@ -413,7 +408,7 @@ def extraction(tiktok_zip: str) -> list[props.PropsUIPromptConsentFormTable]:
             "nl": "De tabel hieronder laat zien wat je hebt gezocht en wanneer dat was. De grootte van de woorden in de grafiek geeft aan hoe vaak de zoekterm voorkomt in jouw gegevens.",
             "en": "The table below shows what you have searched for and when. The size of the words in the chart indicates how often the search term appears in your data.",
         })
-        table =  props.PropsUIPromptConsentFormTable(df_name, table_title, df, table_description, [wordcloud])
+        table =  props.PropsUIPromptConsentFormTable(df_name, table_title, df, table_description)
         tables_to_render.append(table)
 
 
