@@ -324,9 +324,20 @@ def post_to_df(tiktok_zip: str):
         b = io.TextIOWrapper(b, encoding='utf-8')
         text = b.read()
 
-        pattern = re.compile(r"^Date: (.*?)\nLink: (.*?)\nLike\(s\): (.*?)$", re.MULTILINE)
+        pattern = re.compile(
+            r"Date: (.*?)\n"
+            r"Link: (.*?)\n"
+            r"Like\(s\): (.*?)\n"
+            r"(?:[^\S\r\n]*\S.*\n)*?"
+            r"(?:AI-generated content: (.*?)\n"
+            r"(?:[^\S\r\n]*\S.*\n)*?)?"
+            r"(?=\n\s*\n|$)",
+            re.MULTILINE
+        )
         matches = re.findall(pattern, text)
-        out = pd.DataFrame(matches, columns=["Time and date", "Link", "Number of likes"]) # pyright: ignore
+        # if AI-generated content is not present in the data add a No label
+        matches = [ (a, b, c, d) if d == "Yes" else (a, b, c, "No") for (a, b, c, d) in matches ]
+        out = pd.DataFrame(matches, columns=["Time and date", "Link", "Number of likes", "AI-generated content"]) # pyright: ignore
 
     except Exception as e:
         logger.error(e)
