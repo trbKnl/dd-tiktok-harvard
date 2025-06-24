@@ -12,6 +12,7 @@ import re
 import pandas as pd
 
 import port.api.props as props
+import port.api.d3i_props as d3i_props
 import port.helpers.extraction_helpers as eh
 import port.helpers.port_helpers as ph
 import port.helpers.validate as validate
@@ -348,7 +349,7 @@ def extraction(tiktok_zip: str) -> list[props.PropsUIPromptConsentFormTable]:
             "nl": "In the table below, you will find the videos that belong to your favorites.",
             "en": "In the table below, you will find the videos that belong to your favorites.",
          })
-        table = props.PropsUIPromptConsentFormTable(df_name, table_title, df, table_description)
+        table = d3i_props.PropsUIPromptConsentFormTableViz(df_name, table_title, df, table_description)
         tables_to_render.append(table)
 
 
@@ -363,7 +364,7 @@ def extraction(tiktok_zip: str) -> list[props.PropsUIPromptConsentFormTable]:
             "nl": "In the table below you can find the usernames of the accounts you are following", 
             "en": "In the table below you can find the usernames of the accounts you are following", 
          })
-        table = props.PropsUIPromptConsentFormTable(df_name, table_title, df, table_description)
+        table = d3i_props.PropsUIPromptConsentFormTableViz(df_name, table_title, df, table_description)
         tables_to_render.append(table)
 
 
@@ -379,7 +380,7 @@ def extraction(tiktok_zip: str) -> list[props.PropsUIPromptConsentFormTable]:
             "en": "In the table below, you will find the videos you have liked and when that was.",
         })
 
-        table =  props.PropsUIPromptConsentFormTable(df_name, table_title, df, table_description)
+        table =  d3i_props.PropsUIPromptConsentFormTableViz(df_name, table_title, df, table_description)
         tables_to_render.append(table)
 
     df = login_history_to_df(tiktok_zip)
@@ -393,18 +394,13 @@ def extraction(tiktok_zip: str) -> list[props.PropsUIPromptConsentFormTable]:
             "nl": "In the table below you can find the date and the time you logged in to TikTok",
             "en": "In the table below you can find the date and the time you logged in to TikTok",
          })
-        table = props.PropsUIPromptConsentFormTable(df_name, table_title, df, table_description)
+        table = d3i_props.PropsUIPromptConsentFormTableViz(df_name, table_title, df, table_description)
         tables_to_render.append(table)
 
 
     df = searches_to_df(tiktok_zip)
     if not df.empty:
         df_name = "tiktok_searches"
-        wordcloud = {
-            "title": {"en": "", "nl": ""},
-            "type": "wordcloud",
-            "textColumn": "Zoekterm",
-        }
         table_title = props.Translatable({
             "en": "Search terms", 
             "nl": "Zoektermen", 
@@ -413,7 +409,7 @@ def extraction(tiktok_zip: str) -> list[props.PropsUIPromptConsentFormTable]:
             "nl": "De tabel hieronder laat zien wat je hebt gezocht en wanneer dat was. De grootte van de woorden in de grafiek geeft aan hoe vaak de zoekterm voorkomt in jouw gegevens.",
             "en": "The table below shows what you have searched for and when. The size of the words in the chart indicates how often the search term appears in your data.",
         })
-        table =  props.PropsUIPromptConsentFormTable(df_name, table_title, df, table_description, [wordcloud])
+        table =  d3i_props.PropsUIPromptConsentFormTableViz(df_name, table_title, df, table_description)
         tables_to_render.append(table)
 
 
@@ -429,7 +425,7 @@ def extraction(tiktok_zip: str) -> list[props.PropsUIPromptConsentFormTable]:
             "en": "The table below shows what you have shared, at what time, and how.",
         })
 
-        table =  props.PropsUIPromptConsentFormTable(df_name, table_title, df, table_description)
+        table =  d3i_props.PropsUIPromptConsentFormTableViz(df_name, table_title, df, table_description)
         tables_to_render.append(table)
 
 
@@ -444,7 +440,7 @@ def extraction(tiktok_zip: str) -> list[props.PropsUIPromptConsentFormTable]:
             "en": "The table below indicates exactly which TikTok videos you have watched and when that was.",
             "nl": "De tabel hieronder geeft aan welke TikTok video's je precies hebt bekeken en wanneer dat was.",
         })
-        table = props.PropsUIPromptConsentFormTable(df_name, table_title, data, table_description, []) 
+        table = d3i_props.PropsUIPromptConsentFormTableViz(df_name, table_title, data, table_description, []) 
         tables_to_render.append(table)
 
 
@@ -459,7 +455,7 @@ def extraction(tiktok_zip: str) -> list[props.PropsUIPromptConsentFormTable]:
             "nl": "In the table below you can find the comments you placed on tiktok", 
             "en": "In the table below you can find the comments you placed on tiktok", 
          })
-        table = props.PropsUIPromptConsentFormTable(df_name, table_title, df, table_description)
+        table = d3i_props.PropsUIPromptConsentFormTableViz(df_name, table_title, df, table_description)
         tables_to_render.append(table)
 
     df = post_to_df(tiktok_zip)
@@ -475,8 +471,24 @@ def extraction(tiktok_zip: str) -> list[props.PropsUIPromptConsentFormTable]:
             "nl": "The table below shows the posts you made on TikTok",
         })
 
-        table =  props.PropsUIPromptConsentFormTable(df_name, table_title, df, table_description)
+        table =  d3i_props.PropsUIPromptConsentFormTableViz(df_name, table_title, df, table_description)
         tables_to_render.append(table)
+
+        df = settings_to_df(tiktok_zip)
+        if not df.empty:
+            df_name = "tiktok_settings"
+            table_title = props.Translatable({
+                "en": "Your settings on TikTok", 
+                "nl": "Your settings on TikTok", 
+            })
+
+            table_description = props.Translatable({
+                "en": "The table below shows your settings on TikTok",
+                "nl": "The table below shows your settings on TikTok",
+            })
+
+            table =  d3i_props.PropsUIPromptConsentFormTableViz(df_name, table_title, df, table_description)
+            tables_to_render.append(table)
 
     return tables_to_render
 
@@ -541,8 +553,7 @@ def process(session_id: int):
 
     if table_list is not None:
         logger.info("Prompt consent; %s", platform_name)
-        review_data_prompt = ph.generate_review_data_prompt(f"{session_id}-tiktok", REVIEW_DATA_DESCRIPTION, table_list)
+        review_data_prompt = ph.generate_review_data_prompt(REVIEW_DATA_DESCRIPTION, table_list)
         yield ph.render_page(REVIEW_DATA_HEADER, review_data_prompt)
 
     yield ph.exit(0, "Success")
-    yield ph.render_end_page()
