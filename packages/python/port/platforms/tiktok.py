@@ -295,24 +295,42 @@ def share_history_to_df(tiktok_zip: str):
     return out
 
 
-def settings_to_df(tiktok_zip: str):
-
-    out = pd.DataFrame()
+def settings_to_df(tiktok_zip: str) -> pd.DataFrame:
+    data = []
 
     try:
         b = eh.extract_file_from_zip(tiktok_zip, "Settings.txt")
         b = io.TextIOWrapper(b, encoding='utf-8')
         text = b.read()
 
-        pattern = re.compile(r"^Interests: (.*?)$", re.MULTILINE)
-        match = re.search(pattern, text)
-        if match:
-            interests = match.group(1).split("|")
-            out = pd.DataFrame(interests, columns=["Interests"])  # pyright: ignore
+        extract_terms = [
+            "Private Account",
+            "Personalized Ads",
+            "Who Can Post Comments",
+            "Who Can Duet With Me",
+            "Who Can Send Me Message",
+            "Who Can View Videos I Liked",
+            "Who Can Stitch with your videos",
+            "Filter Comments",
+            "New Fans",
+            "New Likes on My Video",
+            "New Comments on My Video",
+            "Desktop notification",
+            "Interests",
+            "Keyword filters for videos in For You feed",
+            "Keyword filters for videos in Following feed",
+        ]
 
+        data = []
+        for term in extract_terms:
+            pattern = rf"^{term}: (.*?)$"
+            match = re.search(pattern, text, re.MULTILINE)
+            if match is not None:
+                data.append((term, match.group(1)))
     except Exception as e:
         logger.error(e)
 
+    out = pd.DataFrame(data, columns=["Setting", "Value"]) # pyright: ignore
     return out
 
 
@@ -473,6 +491,7 @@ def extraction(tiktok_zip: str) -> list[props.PropsUIPromptConsentFormTable]:
 
         table =  d3i_props.PropsUIPromptConsentFormTableViz(df_name, table_title, df, table_description)
         tables_to_render.append(table)
+
 
         df = settings_to_df(tiktok_zip)
         if not df.empty:
