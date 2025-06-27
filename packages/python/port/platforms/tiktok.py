@@ -83,7 +83,7 @@ def browsing_history_to_df(tiktok_zip: str) -> Dict[str, Dict[str, str]] | None 
     out = None
 
     try:
-        b = eh.extract_file_from_zip(tiktok_zip, "Browsing History.txt")
+        b = eh.extract_file_from_zip(tiktok_zip, "Watch History.txt")
         b = io.TextIOWrapper(b, encoding='utf-8')
         text = b.read()
 
@@ -339,7 +339,7 @@ def post_to_df(tiktok_zip: str):
     out = pd.DataFrame()
 
     try:
-        b = eh.extract_file_from_zip(tiktok_zip, "Post.txt")
+        b = eh.extract_file_from_zip(tiktok_zip, "Posts.txt")
         b = io.TextIOWrapper(b, encoding='utf-8')
         text = b.read()
 
